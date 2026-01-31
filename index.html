@@ -1,259 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shadhin's Ultimate Fun Zone 🎉</title>
-  <style>
-    /* ===== Body & Background ===== */
-    body {
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(-45deg, #fbc2eb, #a6c1ee, #ffecd2, #a1c4fd);
-      background-size: 400% 400%;
-      animation: gradientBG 20s ease infinite;
-      color: #333;
-      padding: 20px;
-      transition: background 1s, color 1s;
-      overflow-x: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Profile & Comments</title>
+    <!-- Font Awesome for Social Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS (The Styling) --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body.dark {
-      background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #1b2735);
-      color: #f5f5f5;
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0a0a0a;
+            color: white;
+            overflow-x: hidden;
+        }
 
-    @keyframes gradientBG {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
-    }
+        /* Full Screen Background */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            padding: 50px 20px;
+        }
 
-    h1, h2 {
-      text-align: center;
-      animation: fadeIn 2s ease;
-    }
+        /* Dark Overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1;
+        }
 
-    .about, .comment-section {
-      background: rgba(255, 255, 255, 0.85);
-      padding: 20px;
-      border-radius: 20px;
-      max-width: 600px;
-      margin: 20px auto;
-      animation: fadeInUp 1s ease;
-      transition: background 0.5s;
-    }
+        .main-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
 
-    body.dark .about,
-    body.dark .comment-section {
-      background: rgba(50,50,50,0.8);
-    }
+        /* Profile Card & Comment Box Style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 40px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
 
-    /* ===== Floating & Scroll Emojis ===== */
-    .emoji {
-      position: absolute;
-      font-size: 24px;
-      animation: floatEmoji 6s linear infinite;
-      pointer-events: none;
-    }
+        /* Profile Section */
+        .profile-pic img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid #00d2ff;
+            object-fit: cover;
+            margin-bottom: 20px;
+            transition: 0.4s;
+        }
 
-    @keyframes floatEmoji {
-      0% {transform: translateY(100vh) rotate(0deg);}
-      100% {transform: translateY(-50px) rotate(360deg);}
-    }
+        .profile-pic img:hover {
+            transform: scale(1.05);
+            border-color: #fff;
+        }
 
-    /* ===== Comments ===== */
-    .comment {
-      background: #fff;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 12px;
-      box-shadow: 1px 1px 8px rgba(0,0,0,0.1);
-      animation: fadeInUp 0.5s ease;
-      position: relative;
-    }
+        .name {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
 
-    body.dark .comment {
-      background: #333;
-      color: #f5f5f5;
-    }
+        .tagline {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-    .reactions {
-      position: absolute;
-      top: 5px;
-      right: 10px;
-      font-size: 1.1rem;
-      cursor: pointer;
-    }
+        /* Social Icons */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
 
-    input, textarea, button {
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      font-family: inherit;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+        .social-links a {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 20px;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    input:focus, textarea:focus {
-      transform: scale(1.02);
-      box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-    }
+        /* Brand Colors on Hover */
+        .social-links a.fb:hover { background: #1877F2; }
+        .social-links a.wa:hover { background: #25D366; }
+        .social-links a.insta:hover { background: #E4405F; }
+        .social-links a.tele:hover { background: #0088cc; }
 
-    button {
-      background-color: #ff8c00;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
+        .social-links a:hover {
+            transform: translateY(-5px);
+            color: #fff;
+        }
 
-    button:hover {
-      transform: scale(1.05);
-      background-color: #ff6700;
-    }
+        /* Comment Section */
+        .comment-section h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 400;
+            color: #00d2ff;
+        }
 
-    .joke {
-      text-align: center;
-      margin: 15px 0;
-      font-size: 1.2rem;
-      color: #ff4500;
-      animation: fadeIn 2s ease;
-    }
+        .input-group {
+            margin-bottom: 15px;
+        }
 
-    /* ===== Animations ===== */
-    @keyframes fadeIn { from {opacity:0;} to{opacity:1;} }
-    @keyframes fadeInUp { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-family: inherit;
+            outline: none;
+            transition: 0.3s;
+        }
 
-    /* ===== Light/Dark Button ===== */
-    .theme-btn {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      padding: 10px 15px;
-      background-color: #ff8c00;
-      border: none;
-      border-radius: 10px;
-      color: white;
-      cursor: pointer;
-      z-index: 1000;
-    }
+        input:focus, textarea:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #00d2ff;
+        }
 
-    .theme-btn:hover { background-color: #ff6700; }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #00d2ff;
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
 
-  </style>
+        button:hover {
+            background: #fff;
+            transform: scale(1.02);
+        }
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+        /* Comment Display Box */
+        .comment-display {
+            margin-top: 25px;
+            max-height: 200px;
+            overflow-y: auto;
+            text-align: left;
+            padding-right: 5px;
+        }
+
+        /* Scrollbar styling */
+        .comment-display::-webkit-scrollbar { width: 4px; }
+        .comment-display::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        .single-comment {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 3px solid #00d2ff;
+        }
+
+        .single-comment strong {
+            display: block;
+            font-size: 14px;
+            color: #00d2ff;
+            margin-bottom: 3px;
+        }
+
+        .single-comment p {
+            font-size: 13px;
+            color: #ddd;
+            line-height: 1.4;
+        }
+    </style>
 </head>
 <body>
 
-  <button class="theme-btn" onclick="toggleTheme()">🌙 / ☀️</button>
+    <section class="hero-section">
+        <div class="overlay"></div> 
+        
+        <div class="main-container">
+            <!-- Profile Card -->
+            <div class="glass-card">
+                <div class="profile-pic">
+                    <!-- Replace with your real photo URL -->
+                    <img src="https://via.placeholder.com/150" alt="User Image">
+                </div>
+                <h1 class="name">Your Name</h1>
+                <p class="tagline">Professional Freelancer</p>
 
-  <h1>🎉 Shadhin's Ultimate Fun Zone 🎉</h1>
+                <div class="social-links">
+                    <a href="#" target="_blank" class="fb"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" target="_blank" class="wa"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" target="_blank" class="insta"><i class="fab fa-instagram"></i></a>
+                    <a href="#" target="_blank" class="tele"><i class="fab fa-telegram-plane"></i></a>
+                </div>
+            </div>
 
-  <!-- Floating Emojis -->
-  <div id="emojis-container"></div>
+            <!-- Comment Section -->
+            <div class="glass-card">
+                <div class="comment-section">
+                    <h3>Leave a Message</h3>
+                    <div class="input-group">
+                        <input type="text" id="userName" placeholder="Enter Your Name" required>
+                    </div>
+                    <div class="input-group">
+                        <textarea id="userComment" placeholder="Write a personal comment..." rows="3" required></textarea>
+                    </div>
+                    <button id="submitBtn">Post Comment</button>
 
-  <div class="about">
-    <h2>About Me</h2>
-    <p>Hi! I'm Shadhin 😎</p>
-    <ul>
-      <li>Hobbies: Gaming 🎮, Drawing ✏️, Watching Movies 🍿</li>
-      <li>Fun Fact: I can eat 5 samosas in one sitting! 😋</li>
-      <li>Favorite Emoji: 😂</li>
-    </ul>
-  </div>
+                    <div id="commentDisplay" class="comment-display">
+                        <!-- New comments will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <div class="joke" id="joke"></div>
+    <!-- JavaScript for Comment Logic -->
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const nameInput = document.getElementById('userName');
+            const commentInput = document.getElementById('userComment');
+            const displayArea = document.getElementById('commentDisplay');
 
-  <div class="comment-section">
-    <h2>Leave a Fun Comment!</h2>
-    <input type="text" id="name" placeholder="Your Name">
-    <textarea id="comment" rows="3" placeholder="Your Comment"></textarea>
-    <button onclick="addComment()">Submit</button>
+            if (nameInput.value.trim() !== "" && commentInput.value.trim() !== "") {
+                // Create a new comment box
+                const newComment = document.createElement('div');
+                newComment.classList.add('single-comment');
+                
+                newComment.innerHTML = `
+                    <strong>${nameInput.value}</strong>
+                    <p>${commentInput.value}</p>
+                `;
+                
+                // Add to the top of the list
+                displayArea.prepend(newComment);
 
-    <div id="comments-display"></div>
-  </div>
-
-  <script>
-    // ===== Random Joke =====
-    const jokes = [
-      "Why don’t scientists trust atoms? Because they make up everything! 😂",
-      "I told my computer I needed a break, and it said: 'No problem, I'll go to sleep!' 😎",
-      "Why did the scarecrow win an award? Because he was outstanding in his field! 🌾"
-    ];
-    document.getElementById('joke').innerText = jokes[Math.floor(Math.random()*jokes.length)];
-
-    // ===== Floating Emojis =====
-    const emojis = ["🎉","😂","😎","✨","🍕","🎮","🍿"];
-    const emojiContainer = document.getElementById('emojis-container');
-    for(let i=0;i<15;i++){
-      const span = document.createElement('span');
-      span.className='emoji';
-      span.style.left=Math.random()*100+'vw';
-      span.style.animationDuration=(5+Math.random()*5)+'s';
-      span.innerText=emojis[Math.floor(Math.random()*emojis.length)];
-      emojiContainer.appendChild(span);
-    }
-
-    // ===== Light/Dark Mode =====
-    function toggleTheme(){ document.body.classList.toggle('dark'); }
-
-    // ===== Firebase Setup =====
-    const firebaseConfig = {
-      apiKey: "YOUR_FIREBASE_API_KEY",
-      authDomain: "YOUR_FIREBASE_PROJECT.firebaseapp.com",
-      databaseURL: "https://YOUR_FIREBASE_PROJECT.firebaseio.com",
-      projectId: "YOUR_FIREBASE_PROJECT",
-      storageBucket: "YOUR_FIREBASE_PROJECT.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    // ===== Add Comment =====
-    function addComment(){
-      const name=document.getElementById('name').value.trim();
-      const comment=document.getElementById('comment').value.trim();
-      if(!name||!comment){ alert('Please enter both name and comment!'); return; }
-      const commentRef=db.ref('comments').push();
-      commentRef.set({ name, comment, reactions:{like:0,laugh:0,heart:0} });
-      document.getElementById('name').value=''; document.getElementById('comment').value='';
-    }
-
-    // ===== Display Comments =====
-    const commentsDisplay=document.getElementById('comments-display');
-    const commentsRef=db.ref('comments');
-    commentsRef.on('value',(snapshot)=>{
-      commentsDisplay.innerHTML='';
-      snapshot.forEach(child=>{
-        const data=child.val();
-        const div=document.createElement('div');
-        div.className='comment';
-        div.innerHTML=`
-          <strong>${data.name}:</strong> ${data.comment}
-          <div class="reactions">
-            ❤️ <span>${data.reactions?.heart||0}</span> 
-            😂 <span>${data.reactions?.laugh||0}</span> 
-            👍 <span>${data.reactions?.like||0}</span>
-          </div>
-        `;
-        // Add reaction click
-        const reactionDiv=div.querySelector('.reactions');
-        reactionDiv.querySelectorAll('span').forEach((span,i)=>{
-          span.parentElement.addEventListener('click',()=>{
-            const reactKey=i===0?'heart':i===1?'laugh':'like';
-            const currentVal=data.reactions?.[reactKey]||0;
-            db.ref('comments/'+child.key+'/reactions/'+reactKey).set(currentVal+1);
-          });
+                // Clear the input fields
+                nameInput.value = '';
+                commentInput.value = '';
+            } else {
+                alert("Please write your name and a comment.");
+            }
         });
-        commentsDisplay.appendChild(div);
-      });
-    });
-
-  </script>
+    </script>
 
 </body>
 </html>
