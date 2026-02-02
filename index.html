@@ -86,7 +86,7 @@
         #loadMoreBtn:hover { background: var(--primary); color: #000; }
 
         /* Utility System */
-        .tool-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+        .tool-nav { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px; }
         .tool-nav-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-dim); padding: 10px 5px; border-radius: 12px; cursor: pointer; font-size: 11px; }
         .tool-nav-btn.active { background: var(--primary); color: #000; font-weight: bold;}
         .tool-content { display: none; text-align: left; background: rgba(0,0,0,0.2); padding: 18px; border-radius: 18px; }
@@ -216,7 +216,6 @@
                     <button class="tool-nav-btn" onclick="openTool('bmiTool', this)">BMI</button>
                     <button class="tool-nav-btn" onclick="openTool('unitTool', this)">Units</button>
                     <button class="tool-nav-btn" onclick="openTool('passTool', this)">Pass</button>
-                    <button class="tool-nav-btn" onclick="openTool('tuneTool', this)">AutoTune</button>
                 </div>
 
                 <div id="ageTool" class="tool-content active">
@@ -249,20 +248,22 @@
                     <button class="submit-btn" style="padding:10px; font-size:11px; background:#333; color:#fff;" onclick="genPass()">Generate Secure Password</button>
                     <div id="passRes" class="res-box"></div>
                 </div>
+            </div>
 
-                <div id="tuneTool" class="tool-content">
-                    <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px;">
-                        🎤 Voice Analyzer & Recorder / কণ্ঠ বিশ্লেষক  
-                        <br>
-                        <span style="font-size:11px;">
-                            কথা বলুন — AI বিশ্লেষণ করবে এবং পরে শুনতে পারবেন।
-                        </span>
-                    </p>
-                    <button class="submit-btn" onclick="startTune()">Start Voice / শুরু করুন</button>
-                    <button class="submit-btn" style="margin-top:8px;background:#333;color:#fff;" onclick="stopTune()">Stop / বন্ধ করুন</button>
-                    <button id="playRecordBtn" class="submit-btn" style="margin-top:8px;background:#00d2ff;color:#000;display:none;" onclick="playTune()">Play Recording / রেকর্ড শুনুন</button>
-                    <div id="tuneRes" class="res-box"></div>
-                </div>
+            <!-- New: Voice Studio (AutoTune) Section -->
+            <div class="glass-card">
+                <h3>Voice Studio & AI Analyzer</h3>
+                <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px; text-align: left;">
+                    🎤 Voice Analyzer & Recorder / কণ্ঠ বিশ্লেষক  
+                    <br>
+                    <span style="font-size:11px;">
+                        কথা বলুন — AI আপনার সুর বিশ্লেষণ করবে এবং আপনি তা রেকর্ড করে পুনরায় শুনতে পারবেন।
+                    </span>
+                </p>
+                <button class="submit-btn" onclick="startTune()">Start Voice / শুরু করুন</button>
+                <button class="submit-btn" style="margin-top:8px;background:#333;color:#fff;" onclick="stopTune()">Stop / বন্ধ করুন</button>
+                <button id="playRecordBtn" class="submit-btn" style="margin-top:8px;background:var(--primary);color:#000;display:none;" onclick="playTune()">Play Recording / রেকর্ড শুনুন</button>
+                <div id="tuneRes" class="res-box"></div>
             </div>
 
         </div>
@@ -437,11 +438,10 @@
             advPass();
         }
 
-        // --- UPDATED: AutoTune / Voice Analyzer & Recorder Logic ---
+        // --- Voice Studio (AutoTune) Logic ---
         function startTune() {
             document.getElementById('playRecordBtn').style.display = 'none';
             navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-                // Audio context for Pitch analysis
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 mic = audioCtx.createMediaStreamSource(stream);
                 analyser = audioCtx.createAnalyser();
@@ -449,7 +449,6 @@
                 buffer = new Float32Array(analyser.fftSize);
                 mic.connect(analyser);
                 
-                // Recording logic
                 mediaRecorder = new MediaRecorder(stream);
                 chunks = [];
                 mediaRecorder.ondataavailable = e => chunks.push(e.data);
@@ -469,7 +468,7 @@
             if(raf) cancelAnimationFrame(raf);
             if(audioCtx) audioCtx.close();
             if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
-            showTuneResult("⏹️ বন্ধ করা হয়েছে। আপনি এখন চাইলে শুনতে পারেন।");
+            showTuneResult("⏹️ বিশ্লেষণ বন্ধ। আপনি চাইলে আপনার রেকর্ড শুনতে পারেন।");
         }
 
         function playTune() {
@@ -520,9 +519,9 @@
         }
 
         function getTuneFeedback(cents) {
-            if (Math.abs(cents) < 10) return "Perfect pitch 🎯 / একদম ঠিক সুরে আছে";
-            if (cents > 0) return "Slightly sharp — গলা একটু ঢিলা করুন";
-            return "A bit flat — শ্বাস ও জোর বাড়ান";
+            if (Math.abs(cents) < 10) return "Perfect pitch 🎯";
+            if (cents > 0) return "Slightly sharp";
+            return "A bit flat";
         }
 
         function showTuneResult(html) {
