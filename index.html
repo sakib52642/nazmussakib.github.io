@@ -252,14 +252,15 @@
 
                 <div id="tuneTool" class="tool-content">
                     <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px;">
-                        🎤 Voice Analyzer / কণ্ঠ বিশ্লেষক  
+                        🎤 Voice Analyzer & Recorder / কণ্ঠ বিশ্লেষক  
                         <br>
                         <span style="font-size:11px;">
-                            কথা বলুন বা গান গাইুন — AI আপনার কণ্ঠ বিশ্লেষণ করবে
+                            কথা বলুন — AI বিশ্লেষণ করবে এবং পরে শুনতে পারবেন।
                         </span>
                     </p>
                     <button class="submit-btn" onclick="startTune()">Start Voice / শুরু করুন</button>
                     <button class="submit-btn" style="margin-top:8px;background:#333;color:#fff;" onclick="stopTune()">Stop / বন্ধ করুন</button>
+                    <button id="playRecordBtn" class="submit-btn" style="margin-top:8px;background:#00d2ff;color:#000;display:none;" onclick="playTune()">Play Recording / রেকর্ড শুনুন</button>
                     <div id="tuneRes" class="res-box"></div>
                 </div>
             </div>
@@ -273,6 +274,7 @@
 
         let audioCtx, analyser, mic, buffer, raf;
         let smoothPitch = 0;
+        let mediaRecorder, chunks = [], audioBlob, audioUrl;
 
         // --- Sparky The Companion Logic ---
         const sparky = document.getElementById('sparky');
@@ -435,16 +437,30 @@
             advPass();
         }
 
-        // --- NEW: AutoTune / Voice Analyzer Logic ---
+        // --- UPDATED: AutoTune / Voice Analyzer & Recorder Logic ---
         function startTune() {
+            document.getElementById('playRecordBtn').style.display = 'none';
             navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                // Audio context for Pitch analysis
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 mic = audioCtx.createMediaStreamSource(stream);
                 analyser = audioCtx.createAnalyser();
                 analyser.fftSize = 2048;
                 buffer = new Float32Array(analyser.fftSize);
                 mic.connect(analyser);
-                showTuneResult("🎧 শুনছি... / Listening to your voice…");
+                
+                // Recording logic
+                mediaRecorder = new MediaRecorder(stream);
+                chunks = [];
+                mediaRecorder.ondataavailable = e => chunks.push(e.data);
+                mediaRecorder.onstop = () => {
+                    audioBlob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
+                    audioUrl = URL.createObjectURL(audioBlob);
+                    document.getElementById('playRecordBtn').style.display = 'block';
+                };
+                
+                mediaRecorder.start();
+                showTuneResult("🎧 শুনছি ও রেকর্ড করছি... / Listening & Recording…");
                 listen();
             }).catch(err => showTuneResult("❌ Microphone access denied!"));
         }
@@ -452,7 +468,17 @@
         function stopTune() {
             if(raf) cancelAnimationFrame(raf);
             if(audioCtx) audioCtx.close();
-            showTuneResult("⏹️ বন্ধ করা হয়েছে / Voice analysis stopped");
+            if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+            showTuneResult("⏹️ বন্ধ করা হয়েছে। আপনি এখন চাইলে শুনতে পারেন।");
+        }
+
+        function playTune() {
+            if(audioUrl) {
+                const audio = new Audio(audioUrl);
+                audio.play();
+                showTuneResult("🔊 আপনার রেকর্ডটি প্লে হচ্ছে...");
+                audio.onended = () => showTuneResult("✅ প্লেব্যাক শেষ।");
+            }
         }
 
         function listen() {
